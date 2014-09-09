@@ -510,7 +510,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Hmm, that was no help.  Dropping fares altogether and passing a slightly slimmer formula through the ``` glm()``` function will give us a new baseline for model improvement.
 ```sh
 > glm(Fate ~ Sex + Class + Age + Family + Embarked, 
-      data = train.batch, family=binomial("logit")
+      data = train.batch, family=binomial("logit"))
 
 Call:  glm(formula = Fate ~ Sex + Class + Age + Family + Embarked, family = binomial("logit"), data = train.batch)
 
