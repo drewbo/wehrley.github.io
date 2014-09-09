@@ -429,7 +429,7 @@ I selected an 80/20 split for training data and testing data.  The code:
 ```sh
 ## split training data into train batch and test batch
 set.seed(23)
-training.rows <- createDataPartition(df.train.munged$Survived, 
+training.rows <- createDataPartition(df.train.munged$Fate, 
                                      p = 0.8, list = FALSE)
 train.batch <- df.train.munged[training.rows, ]
 test.batch <- df.train.munged[-training.rows, ]
@@ -437,7 +437,7 @@ test.batch <- df.train.munged[-training.rows, ]
 Before I go pouring features into the popular Random Forest method, I'm going to give one of the simplest classification methods a crack at the Titanic prediction challenge.  Logistic regression, which surfaced about 70 years ago, has been used extensively in multiple fields.  I'll start simple by passing essentially the features provided in the raw training data (remember that we combined ``` SibSp``` and ``` Parch``` to form ``` Family```) through the R function for fitting general linearized models.  When entering the model formula, I typically have a habit of listing the features in an order roughly corresponding to what I initially believe their importance will be.  In this case, I've ordered them roughly by the two main themes I discussed earlier (women & children first policy and location on the ship).  By setting the argument ``` family``` to ``` binomial``` with a ``` logit``` link, I'm asking ``` glm( )``` to produce a logistic regression.
 ```sh
 Titanic.logit.1 <- glm(Fate ~ Sex + Class + Age + Family + Embarked + Fare, 
-                       data = train.batch, family=binomial("logit")
+                       data = train.batch, family=binomial("logit"))
 ```
 To assess this first model and the various binary logistic regressions that will appear in its wake, we will use the [chi-square](http://en.wikipedia.org/wiki/Chi-squared_test) statistic, which is basically a measure of the *goodness of fit* of observed values to expected values.  The bigger the difference (or *deviance*) of the observed values from the expected values, the poorer the fit of the model.  The *null deviance* shows how well passenger survival is predicted by a "null" model using only a constant ([grand mean](http://en.wikipedia.org/wiki/Grand_mean)).   As we adjust the model's formula by adding and/or removing variables, we'll look for those changes which prompt a drop in the *residual deviance*, indicating an improvement in fit.
 ```sh
